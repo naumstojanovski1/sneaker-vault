@@ -21,18 +21,18 @@ const Footer = () => (
             <div>
                 <h5 className="font-bold uppercase text-sm mb-6 tracking-widest">Support</h5>
                 <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                    <li><a href="#" className="hover:text-white transition">Order Status</a></li>
-                    <li><a href="#" className="hover:text-white transition">Shipping & Delivery</a></li>
-                    <li><a href="#" className="hover:text-white transition">Returns</a></li>
-                    <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
+                    <li><a href="/" className="hover:text-white transition">Order Status</a></li>
+                    <li><a href="/" className="hover:text-white transition">Shipping & Delivery</a></li>
+                    <li><a href="/" className="hover:text-white transition">Returns</a></li>
+                    <li><a href="/" className="hover:text-white transition">Contact Us</a></li>
                 </ul>
             </div>
             <div>
                 <h5 className="font-bold uppercase text-sm mb-6 tracking-widest">About SNEAKR</h5>
                 <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                    <li><a href="#" className="hover:text-white transition">News</a></li>
-                    <li><a href="#" className="hover:text-white transition">Careers</a></li>
-                    <li><a href="#" className="hover:text-white transition">Sustainability</a></li>
+                    <li><a href="/" className="hover:text-white transition">News</a></li>
+                    <li><a href="/" className="hover:text-white transition">Careers</a></li>
+                    <li><a href="/" className="hover:text-white transition">Sustainability</a></li>
                 </ul>
             </div>
             <div>
@@ -51,8 +51,8 @@ const Footer = () => (
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 mt-10 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-[10px] text-gray-500 uppercase tracking-widest">© 2026 SNEAKR INC. ALL RIGHTS RESERVED</p>
             <div className="flex gap-8 text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-                <a href="#" className="hover:text-white">Privacy Policy</a>
-                <a href="#" className="hover:text-white">Terms of Sale</a>
+                <a href="/" className="hover:text-white">Privacy Policy</a>
+                <a href="/" className="hover:text-white">Terms of Sale</a>
             </div>
         </div>
     </footer>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { X, Package, Truck, DollarSign, User, FileText, MessageSquare, Printer } from 'lucide-react';
-import { updateOrderStatus } from '../services/orderService';
+import { X, Package, Truck, DollarSign, User, MessageSquare, Printer } from 'lucide-react';
 import { sendOrderUpdateEmail } from '../services/emailService';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';

@@ -16,6 +16,7 @@ const CancelOrder = () => {
     useEffect(() => {
         document.title = 'SNEAKR. - Cancel Order';
         loadOrder();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orderNumber]);
 
     const loadOrder = async () => {

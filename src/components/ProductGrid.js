@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 import { getProducts } from '../services/productService';
 
