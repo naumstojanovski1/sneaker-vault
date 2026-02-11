@@ -143,53 +143,53 @@ const Nav = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-            <div className="lg:hidden bg-white border-t">
-                <div className="px-6 py-4 space-y-4">
-                    <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full">
-                        <Search size={18} className="text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-transparent border-none focus:ring-0 text-sm ml-2 w-full outline-none"
-                        />
+        <div className={`lg:hidden bg-white border-t overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+            <div className="px-6 py-4 space-y-4">
+                <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full">
+                    <Search size={18} className="text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="bg-transparent border-none focus:ring-0 text-sm ml-2 w-full outline-none"
+                    />
+                </div>
+                {showResults && searchResults.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg overflow-hidden">
+                        {searchResults.map(product => (
+                            <button
+                                key={product.id}
+                                onClick={() => handleProductClick(product.slug)}
+                                className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 transition text-left border-b last:border-b-0"
+                            >
+                                <img src={product.img} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                                <div className="flex-1">
+                                    <p className="font-bold text-sm">{product.name}</p>
+                                    <p className="text-xs text-gray-500">${product.salePrice || product.price}</p>
+                                </div>
+                            </button>
+                        ))}
                     </div>
-                    {showResults && searchResults.length > 0 && (
-                        <div className="bg-gray-50 rounded-lg overflow-hidden">
-                            {searchResults.map(product => (
-                                <button
-                                    key={product.id}
-                                    onClick={() => handleProductClick(product.slug)}
-                                    className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 transition text-left border-b last:border-b-0"
-                                >
-                                    <img src={product.img} alt={product.name} className="w-12 h-12 object-cover rounded" />
-                                    <div className="flex-1">
-                                        <p className="font-bold text-sm">{product.name}</p>
-                                        <p className="text-xs text-gray-500">${product.salePrice || product.price}</p>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                    <div className="space-y-3 pt-2">
-                        <Link to="/new-releases" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                            New Releases
-                        </Link>
-                        <Link to="/men" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                            Men
-                        </Link>
-                        <Link to="/women" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                            Women
-                        </Link>
-                        <Link to="/sale" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm text-red-600 hover:text-red-400 transition flex items-center gap-2">
-                            <Flame size={16} fill="currentColor" /> SALE
-                        </Link>
-                    </div>
+                )}
+                <div className="space-y-3 pt-2">
+                    <Link to="/new-releases" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                        New Releases
+                    </Link>
+                    <Link to="/men" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                        Men
+                    </Link>
+                    <Link to="/women" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                        Women
+                    </Link>
+                    <Link to="/sale" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm text-red-600 hover:text-red-400 transition flex items-center gap-2">
+                        <Flame size={16} fill="currentColor" /> SALE
+                    </Link>
                 </div>
             </div>
-        )}
+        </div>
         </nav>
     );
 };
