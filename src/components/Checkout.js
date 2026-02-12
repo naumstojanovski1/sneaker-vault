@@ -3,7 +3,6 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { createOrder } from '../services/orderService';
-import { sendOrderConfirmationEmail } from '../services/emailService';
 import { doc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
@@ -39,13 +38,6 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                 await updateDoc(productRef, {
                     stock: increment(-(item.quantity || 1))
                 });
-            }
-            
-            // Send confirmation email
-            try {
-                await sendOrderConfirmationEmail(order, formData);
-            } catch (emailError) {
-                console.error('Failed to send confirmation email:', emailError);
             }
             
             onSuccess(order);
