@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Search, Menu, Flame, X } from 'lucide-react';
+import { ShoppingCart, Search, Menu, Flame, X, ChevronDown } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { getProducts } from '../services/productService';
@@ -11,6 +11,8 @@ const Nav = ({ onOpenCart }) => {
     const [showResults, setShowResults] = useState(false);
     const [allProducts, setAllProducts] = useState([]);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [menDropdown, setMenDropdown] = useState(false);
+    const [womenDropdown, setWomenDropdown] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -65,11 +67,35 @@ const Nav = ({ onOpenCart }) => {
                 </Link>
             </div>
 
-            <div className="hidden lg:flex flex-1 justify-center space-x-8 text-[13px] font-bold uppercase tracking-tight">
-                <Link to="/new-releases" className="hover:text-gray-400 transition">NEW RELEASES</Link>
-                <Link to="/men" className="hover:text-gray-400 transition">MEN</Link>
-                <Link to="/women" className="hover:text-gray-400 transition">WOMEN</Link>
-                <Link to="/sale" className="hover:text-gray-400 transition text-red-600 flex items-center gap-1">
+            <div className="hidden lg:flex flex-1 justify-center space-x-6 text-[13px] font-bold uppercase tracking-tight">
+                <Link to="/collection/new-releases" className="hover:text-gray-400 transition whitespace-nowrap">NEW RELEASES</Link>
+                <Link to="/collection/all-products" className="hover:text-gray-400 transition whitespace-nowrap">ALL PRODUCTS</Link>
+                
+                <div className="relative group">
+                    <Link to="/collection/men/all" className="hover:text-gray-400 transition flex items-center gap-1">
+                        MEN <ChevronDown size={14} />
+                    </Link>
+                    <div className="absolute top-full left-0 mt-2 bg-white border shadow-lg w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                        <Link to="/collection/men/shoes" className="block px-6 py-3 hover:bg-gray-50 text-xs">Shoes</Link>
+                        <Link to="/collection/men/clothing" className="block px-6 py-3 hover:bg-gray-50 text-xs">Clothing</Link>
+                        <Link to="/collection/men/accessories" className="block px-6 py-3 hover:bg-gray-50 text-xs">Accessories</Link>
+                        <Link to="/collection/men/all" className="block px-6 py-3 hover:bg-gray-50 text-xs font-black">View All</Link>
+                    </div>
+                </div>
+
+                <div className="relative group">
+                    <Link to="/collection/women/all" className="hover:text-gray-400 transition flex items-center gap-1">
+                        WOMEN <ChevronDown size={14} />
+                    </Link>
+                    <div className="absolute top-full left-0 mt-2 bg-white border shadow-lg w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                        <Link to="/collection/women/shoes" className="block px-6 py-3 hover:bg-gray-50 text-xs">Shoes</Link>
+                        <Link to="/collection/women/clothing" className="block px-6 py-3 hover:bg-gray-50 text-xs">Clothing</Link>
+                        <Link to="/collection/women/accessories" className="block px-6 py-3 hover:bg-gray-50 text-xs">Accessories</Link>
+                        <Link to="/collection/women/all" className="block px-6 py-3 hover:bg-gray-50 text-xs font-black">View All</Link>
+                    </div>
+                </div>
+
+                <Link to="/collection/sale" className="hover:text-gray-400 transition text-red-600 flex items-center gap-1">
                     <Flame size={14} fill="currentColor" /> SALE
                 </Link>
             </div>
@@ -175,16 +201,52 @@ const Nav = ({ onOpenCart }) => {
                     </div>
                 )}
                 <div className="space-y-3 pt-2">
-                    <Link to="/new-releases" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                    <Link to="/collection/new-releases" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
                         NEW RELEASES
                     </Link>
-                    <Link to="/men" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                        MEN
+                    <Link to="/collection/all-products" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                        ALL PRODUCTS
                     </Link>
-                    <Link to="/women" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                        WOMEN
-                    </Link>
-                    <Link to="/sale" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm text-red-600 hover:text-red-400 transition flex items-center gap-2">
+                    
+                    <div className="relative">
+                        <div className="flex items-center justify-between">
+                            <Link to="/collection/men/all" onClick={handleNavClick} className="flex-1 py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                                MEN
+                            </Link>
+                            <button onClick={(e) => { e.stopPropagation(); setMenDropdown(!menDropdown); }} className="p-2">
+                                <ChevronDown size={16} className={`transition-transform ${menDropdown ? 'rotate-180' : ''}`} />
+                            </button>
+                        </div>
+                        {menDropdown && (
+                            <div className="pl-4 space-y-2 mt-2">
+                                <Link to="/collection/men/shoes" onClick={handleNavClick} className="block py-1 text-sm">Shoes</Link>
+                                <Link to="/collection/men/clothing" onClick={handleNavClick} className="block py-1 text-sm">Clothing</Link>
+                                <Link to="/collection/men/accessories" onClick={handleNavClick} className="block py-1 text-sm">Accessories</Link>
+                                <Link to="/collection/men/all" onClick={handleNavClick} className="block py-1 text-sm font-bold">View All</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="relative">
+                        <div className="flex items-center justify-between">
+                            <Link to="/collection/women/all" onClick={handleNavClick} className="flex-1 py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
+                                WOMEN
+                            </Link>
+                            <button onClick={(e) => { e.stopPropagation(); setWomenDropdown(!womenDropdown); }} className="p-2">
+                                <ChevronDown size={16} className={`transition-transform ${womenDropdown ? 'rotate-180' : ''}`} />
+                            </button>
+                        </div>
+                        {womenDropdown && (
+                            <div className="pl-4 space-y-2 mt-2">
+                                <Link to="/collection/women/shoes" onClick={handleNavClick} className="block py-1 text-sm">Shoes</Link>
+                                <Link to="/collection/women/clothing" onClick={handleNavClick} className="block py-1 text-sm">Clothing</Link>
+                                <Link to="/collection/women/accessories" onClick={handleNavClick} className="block py-1 text-sm">Accessories</Link>
+                                <Link to="/collection/women/all" onClick={handleNavClick} className="block py-1 text-sm font-bold">View All</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link to="/collection/sale" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm text-red-600 hover:text-red-400 transition flex items-center gap-2">
                         <Flame size={16} fill="currentColor" /> SALE
                     </Link>
                 </div>

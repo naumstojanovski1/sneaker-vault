@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductGrid from '../components/ProductGrid';
-import SEO from '../components/SEO';
+import ProductGrid from '../../components/ProductGrid';
+import SEO from '../../components/SEO';
 
 const AirMax = () => {
     return (

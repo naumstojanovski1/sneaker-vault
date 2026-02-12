@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { useConfirm } from '../context/ConfirmContext';
 import { getProducts, deleteProduct, bulkDeleteProducts, bulkUpdateProducts } from '../services/productService';
 import { getOrders, updateOrderStatus } from '../services/orderService';
 import { LogOut, Plus, Trash2, Upload, Eye, Edit, Search, X } from 'lucide-react';
 import AddProductModal from '../components/AddProductModal';
 import CSVImport from '../components/CSVImport';
 import OrderDetail from '../components/OrderDetail';
+import BrandsManagement from '../components/BrandsManagement';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('orders');
@@ -20,9 +23,11 @@ const AdminDashboard = () => {
     const [showBulkActions, setShowBulkActions] = useState(false);
     const [bulkDiscount, setBulkDiscount] = useState('');
     const [orderFilters, setOrderFilters] = useState({ status: 'all', dateRange: 'all' });
-    const [productFilters, setProductFilters] = useState({ category: 'all', status: 'all' });
+    const [productFilters, setProductFilters] = useState({ gender: 'all', type: 'all', brand: 'all', category: 'all', status: 'all' });
     const [searchQuery, setSearchQuery] = useState('');
     const { logout } = useAuth();
+    const { showToast } = useToast();
+    const { confirm } = useConfirm();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,10 +51,10 @@ const AdminDashboard = () => {
     };
 
     const handleDeleteProduct = async (id) => {
-        if (window.confirm('Delete this product?')) {
-            await deleteProduct(id);
-            loadData();
-        }
+        const confirmed = await confirm('Delete this product?');
+        if (!confirmed) return;
+        await deleteProduct(id);
+        loadData();
     };
 
     const handleToggleStatus = async (product) => {
@@ -73,11 +78,11 @@ const AdminDashboard = () => {
     };
 
     const handleBulkDelete = async () => {
-        if (window.confirm(`Delete ${selectedProducts.length} products?`)) {
-            await bulkDeleteProducts(selectedProducts);
-            setSelectedProducts([]);
-            loadData();
-        }
+        const confirmed = await confirm(`Delete ${selectedProducts.length} products?`);
+        if (!confirmed) return;
+        await bulkDeleteProducts(selectedProducts);
+        setSelectedProducts([]);
+        loadData();
     };
 
     const handleBulkSetPrivate = async () => {
@@ -88,7 +93,7 @@ const AdminDashboard = () => {
 
     const handleBulkSetDiscount = async () => {
         if (!bulkDiscount || isNaN(bulkDiscount)) {
-            alert('Enter a valid discount percentage');
+            showToast('Enter a valid discount percentage', 'error');
             return;
         }
         const updates = {};
@@ -143,6 +148,11 @@ const AdminDashboard = () => {
         return true;
     });
 
+    const availableBrands = useMemo(() => {
+        const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
+        return brands.sort();
+    }, [products]);
+
     const filteredProducts = products.filter(product => {
         // Search filter
         if (searchQuery.trim()) {
@@ -156,6 +166,12 @@ const AdminDashboard = () => {
             if (!matchesSearch) return false;
         }
         
+        if (productFilters.gender !== 'all') {
+            if (productFilters.gender === 'men' && !product.forMen) return false;
+            if (productFilters.gender === 'women' && !product.forWomen) return false;
+        }
+        if (productFilters.type !== 'all' && product.type !== productFilters.type) return false;
+        if (productFilters.brand !== 'all' && product.brand !== productFilters.brand) return false;
         if (productFilters.category !== 'all' && product.category !== productFilters.category) return false;
         if (productFilters.status !== 'all' && product.status !== productFilters.status) return false;
         return true;
@@ -210,9 +226,17 @@ const AdminDashboard = () => {
                     >
                         Products
                     </button>
+                    <button
+                        onClick={() => setActiveTab('brands')}
+                        className={`flex-1 px-4 md:px-6 py-3 font-bold uppercase text-xs md:text-sm ${activeTab === 'brands' ? 'bg-black text-white' : 'bg-white text-black'}`}
+                    >
+                        Brands
+                    </button>
                 </div>
 
-                {activeTab === 'orders' ? (
+                {activeTab === 'brands' ? (
+                    <BrandsManagement />
+                ) : activeTab === 'orders' ? (
                     <div>
                         <div className="flex flex-col sm:flex-row gap-2 md:gap-4 mb-6 bg-white p-4 border">
                             <select
@@ -330,11 +354,41 @@ const AdminDashboard = () => {
                                 </button>
                             )}
                             <select
+                                value={productFilters.gender}
+                                onChange={(e) => setProductFilters({...productFilters, gender: e.target.value})}
+                                className="px-3 md:px-4 py-2 border font-bold text-xs md:text-sm"
+                            >
+                                <option value="all">All Genders</option>
+                                <option value="men">Men</option>
+                                <option value="women">Women</option>
+                            </select>
+                            <select
+                                value={productFilters.type}
+                                onChange={(e) => setProductFilters({...productFilters, type: e.target.value})}
+                                className="px-3 md:px-4 py-2 border font-bold text-xs md:text-sm"
+                            >
+                                <option value="all">All Types</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Accessories">Accessories</option>
+                            </select>
+                            <select
+                                value={productFilters.brand}
+                                onChange={(e) => setProductFilters({...productFilters, brand: e.target.value})}
+                                className="px-3 md:px-4 py-2 border font-bold text-xs md:text-sm"
+                            >
+                                <option value="all">All Brands</option>
+                                {availableBrands.map(brand => (
+                                    <option key={brand} value={brand}>{brand}</option>
+                                ))}
+                            </select>
+                            <select
                                 value={productFilters.category}
                                 onChange={(e) => setProductFilters({...productFilters, category: e.target.value})}
                                 className="px-3 md:px-4 py-2 border font-bold text-xs md:text-sm"
                             >
                                 <option value="all">All Categories</option>
+                                <option value="">No Category</option>
                                 <option value="New Arrivals">New Arrivals</option>
                                 <option value="Best Sellers">Best Sellers</option>
                                 <option value="On Sale">On Sale</option>

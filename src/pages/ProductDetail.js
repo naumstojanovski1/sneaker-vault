@@ -3,13 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import { ChevronLeft, Check } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const ProductDetail = () => {
-    const { slug } = useParams();
+    const { productCode } = useParams();
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const { showToast } = useToast();
     const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedImage, setSelectedImage] = useState('');
@@ -18,11 +20,11 @@ const ProductDetail = () => {
     useEffect(() => {
         loadProduct();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [slug]);
+    }, [productCode]);
 
     const loadProduct = async () => {
         try {
-            const q = query(collection(db, 'products'), where('slug', '==', slug));
+            const q = query(collection(db, 'products'), where('productCode', '==', productCode));
             const snapshot = await getDocs(q);
             if (!snapshot.empty) {
                 const data = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
@@ -38,11 +40,11 @@ const ProductDetail = () => {
 
     const handleAddToCart = () => {
         if (product.sizes?.length > 0 && !selectedSize) {
-            alert('Please select a size');
+            showToast('Please select a size', 'error');
             return;
         }
         addToCart({ ...product, selectedSize });
-        alert('Added to cart!');
+        showToast('Added to cart!', 'success');
     };
 
     if (loading) {

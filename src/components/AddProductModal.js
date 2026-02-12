@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { addProduct } from '../services/productService';
 import { getNextProductNumber } from '../services/counterService';
-import { doc, updateDoc } from 'firebase/firestore';
+import { getBrands, addBrand } from '../services/brandService';
+import { useToast } from '../context/ToastContext';
+import { doc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 const AddProductModal = ({ onClose, editProduct = null }) => {
     const [activeTab, setActiveTab] = useState('general');
+    const [brands, setBrands] = useState([]);
+    const [newBrand, setNewBrand] = useState('');
+    const [showAddBrand, setShowAddBrand] = useState(false);
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({
         name: '',
         shortDescription: '',
         description: '',
         type: 'Shoes',
-        category: 'New Arrivals',
+        category: '',
         brand: '',
         sku: '',
         tags: '',
@@ -43,6 +49,7 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
     });
 
     useEffect(() => {
+        loadBrands();
         if (editProduct) {
             setFormData({
                 ...editProduct,
@@ -54,6 +61,32 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
             });
         }
     }, [editProduct]);
+
+    const loadBrands = async () => {
+        const data = await getBrands();
+        setBrands(data.length > 0 ? data : [
+            { id: '1', name: 'Nike' },
+            { id: '2', name: 'Adidas' },
+            { id: '3', name: 'Jordan' },
+            { id: '4', name: 'Puma' },
+            { id: '5', name: 'New Balance' }
+        ]);
+    };
+
+    const handleAddBrand = async () => {
+        if (!newBrand.trim()) return;
+        try {
+            const uppercaseBrand = newBrand.trim().toUpperCase();
+            await addBrand(uppercaseBrand);
+            await loadBrands();
+            setFormData({ ...formData, brand: uppercaseBrand });
+            setNewBrand('');
+            setShowAddBrand(false);
+            showToast('Brand added successfully!', 'success');
+        } catch (error) {
+            showToast('Failed to add brand', 'error');
+        }
+    };
 
     const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
 
@@ -70,6 +103,25 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
         e.preventDefault();
         
         try {
+            // Check for duplicate SKU
+            if (!editProduct) {
+                const q = query(collection(db, 'products'), where('sku', '==', formData.sku));
+                const snapshot = await getDocs(q);
+                if (!snapshot.empty) {
+                    showToast('A product with this SKU already exists!', 'error');
+                    return;
+                }
+            } else {
+                if (formData.sku !== editProduct.sku) {
+                    const q = query(collection(db, 'products'), where('sku', '==', formData.sku));
+                    const snapshot = await getDocs(q);
+                    if (!snapshot.empty) {
+                        showToast('A product with this SKU already exists!', 'error');
+                        return;
+                    }
+                }
+            }
+            
             const productData = {
                 ...formData,
                 price: Number(formData.price),
@@ -88,9 +140,8 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                     ...productData,
                     updatedAt: new Date().toISOString()
                 });
-                alert('Product updated successfully!');
+                showToast('Product updated successfully!', 'success');
             } else {
-                // Create new product
                 const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
                 const productCode = await getNextProductNumber();
                 await addProduct({
@@ -99,11 +150,11 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                     productCode,
                     createdAt: new Date().toISOString()
                 });
-                alert('Product added successfully!');
+                showToast('Product added successfully!', 'success');
             }
             onClose();
         } catch (error) {
-            alert('Failed to save product');
+            showToast('Failed to save product', 'error');
         }
     };
 
@@ -179,6 +230,7 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                                     onChange={(e) => setFormData({...formData, category: e.target.value})}
                                     className="w-full px-4 py-3 border"
                                 >
+                                    <option value="">No Category</option>
                                     <option>New Arrivals</option>
                                     <option>Best Sellers</option>
                                     <option>On Sale</option>
@@ -187,13 +239,45 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                                 </select>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    type="text"
-                                    placeholder="Brand"
-                                    value={formData.brand}
-                                    onChange={(e) => setFormData({...formData, brand: e.target.value})}
-                                    className="w-full px-4 py-3 border"
-                                />
+                                <div>
+                                    <div className="flex gap-2">
+                                        <select
+                                            value={formData.brand}
+                                            onChange={(e) => setFormData({...formData, brand: e.target.value})}
+                                            className="flex-1 px-4 py-3 border"
+                                        >
+                                            <option value="">Select Brand</option>
+                                            {brands.map(brand => (
+                                                <option key={brand.id} value={brand.name}>{brand.name}</option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAddBrand(!showAddBrand)}
+                                            className="px-4 py-3 bg-black text-white font-bold text-sm"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                    {showAddBrand && (
+                                        <div className="flex gap-2 mt-2">
+                                            <input
+                                                type="text"
+                                                placeholder="New brand name"
+                                                value={newBrand}
+                                                onChange={(e) => setNewBrand(e.target.value)}
+                                                className="flex-1 px-3 py-2 border text-sm"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={handleAddBrand}
+                                                className="px-3 py-2 bg-green-600 text-white text-sm font-bold"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                                 <input
                                     type="text"
                                     placeholder="SKU *"

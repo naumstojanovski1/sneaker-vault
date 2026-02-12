@@ -3,19 +3,22 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
+import { ConfirmProvider } from './context/ConfirmContext';
 import { ArrowUp } from 'lucide-react';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import ProtectedRoute from './components/ProtectedRoute';
-import TechFleece from './pages/TechFleece';
-import AirMax from './pages/AirMax';
-import AllProducts from './pages/AllProducts';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Shoes from './pages/collections/Shoes';
+import Clothing from './pages/collections/Clothing';
+import AllProducts from './pages/collections/AllProducts';
 import Home from './pages/Home';
-import Men from './pages/Men';
-import Women from './pages/Women';
-import NewReleases from './pages/NewReleases';
-import Sale from './pages/Sale';
+import Collection from './pages/collections/Collection';
+import NewReleases from './pages/collections/NewReleases';
+import Sale from './pages/collections/Sale';
 import CheckoutPage from './pages/CheckoutPage';
 import ProductDetail from './pages/ProductDetail';
 import AdminLogin from './pages/AdminLogin';
@@ -89,10 +92,12 @@ export default function App() {
     return (
         <AuthProvider>
             <CartProvider>
-                <HelmetProvider>
-                    <BrowserRouter>
+                <ToastProvider>
+                    <ConfirmProvider>
+                        <HelmetProvider>
+                            <BrowserRouter>
                     <Routes>
-                        <Route path="/blog/login" element={<BlogLogin />} />
+                        <Route path="/blog" element={<BlogLogin />} />
                         <Route path="/blog/dashboard" element={<BlogDashboard />} />
                         <Route path="/admin" element={<AdminLogin />} />
                         <Route path="/admin/dashboard" element={
@@ -107,15 +112,16 @@ export default function App() {
                                     <Nav onOpenCart={() => setIsCartOpen(true)} />
                                     <Routes>
                                         <Route path="/" element={<Home />} />
-                                        <Route path="/all-products" element={<AllProducts />} />
-                                        <Route path="/tech-fleece" element={<TechFleece />} />
-                                        <Route path="/air-max" element={<AirMax />} />
-                                        <Route path="/men" element={<Men />} />
-                                        <Route path="/women" element={<Women />} />
-                                        <Route path="/new-releases" element={<NewReleases />} />
-                                        <Route path="/sale" element={<Sale />} />
+                                        <Route path="/terms-of-service" element={<TermsOfService />} />
+                                        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                                        <Route path="/collection/shoes" element={<Shoes />} />
+                                        <Route path="/collection/clothing" element={<Clothing />} />
+                                        <Route path="/collection/all-products" element={<AllProducts />} />
+                                        <Route path="/collection/new-releases" element={<NewReleases />} />
+                                        <Route path="/collection/sale" element={<Sale />} />
+                                        <Route path="/collection/:gender/:category" element={<Collection />} />
                                         <Route path="/checkout" element={<CheckoutPage />} />
-                                        <Route path="/product/:slug" element={<ProductDetail />} />
+                                        <Route path="/product/:productCode" element={<ProductDetail />} />
                                         <Route path="/order-status" element={<OrderStatus />} />
                                         <Route path="/shipping" element={<Shipping />} />
                                         <Route path="/returns" element={<Returns />} />
@@ -163,6 +169,8 @@ export default function App() {
                     </Routes>
                 </BrowserRouter>
                 </HelmetProvider>
+                    </ConfirmProvider>
+                </ToastProvider>
             </CartProvider>
         </AuthProvider>
     );

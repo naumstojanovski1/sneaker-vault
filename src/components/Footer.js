@@ -70,8 +70,8 @@ const Footer = () => (
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 mt-10 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-[10px] text-gray-500 uppercase tracking-widest">© 2026 SNEAKR INC. ALL RIGHTS RESERVED</p>
             <div className="flex gap-8 text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-                <a href="/" className="hover:text-white">Privacy Policy</a>
-                <a href="/" className="hover:text-white">Terms of Sale</a>
+                <Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
+                <Link to="/terms-of-service" className="hover:text-white">Terms of Service</Link>
             </div>
         </div>
     </footer>

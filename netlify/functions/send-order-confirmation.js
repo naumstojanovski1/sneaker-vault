@@ -1,13 +1,18 @@
 const nodemailer = require('nodemailer');
+const { securityMiddleware } = require('./security-middleware');
 
-exports.handler = async (event) => {
+const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
   const { orderNumber, customerName, customerEmail, items, total } = JSON.parse(event.body);
 
-  const transporter = nodemailer.createTransport({
+  if (!orderNumber || !customerName || !customerEmail || !items || !total) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing required fields' }) };
+  }
+
+  const transporter = nodemailer.createTransporter({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
@@ -116,7 +121,11 @@ exports.handler = async (event) => {
     console.error('Email error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ success: false, error: error.message })
+      body: JSON.stringify({ success: false, error: 'Failed to send email' })
     };
   }
 };
+
+exports.handler = securityMiddleware(handler, {
+  rateLimit: { max: 5, window: 300000 }
+});

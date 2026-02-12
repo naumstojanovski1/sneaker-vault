@@ -12,10 +12,10 @@ const Home = () => {
             <section className="max-w-[1440px] mx-auto px-6 md:px-12 py-12 md:py-16">
                 <div className="flex justify-between items-center mb-6 md:mb-8">
                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase">SHOP BY CATEGORY</h2>
-                    <a href="/new-releases" className="text-xs md:text-sm font-bold uppercase tracking-wider hover:text-red-600 transition">View All →</a>
+                    <a href="/collection/new-releases" className="text-xs md:text-sm font-bold uppercase tracking-wider hover:text-red-600 transition">View All →</a>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-                    <a href="/men" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
+                    <a href="/collection/men/all" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
                         <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600" alt="Men" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition" />
                         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
@@ -23,7 +23,7 @@ const Home = () => {
                             <p className="text-white/80 text-xs md:text-sm">Latest Styles</p>
                         </div>
                     </a>
-                    <a href="/women" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
+                    <a href="/collection/women/all" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
                         <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=600" alt="Women" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition" />
                         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
@@ -31,26 +31,26 @@ const Home = () => {
                             <p className="text-white/80 text-xs md:text-sm">Trending Now</p>
                         </div>
                     </a>
-                    <a href="/tech-fleece" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
-                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=600" alt="Tech Fleece" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+                    <a href="/collection/clothing" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=600" alt="Clothing" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition" />
                         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                            <h3 className="text-white text-xl md:text-2xl font-black uppercase mb-1 md:mb-2">TECH FLEECE</h3>
+                            <h3 className="text-white text-xl md:text-2xl font-black uppercase mb-1 md:mb-2">CLOTHING</h3>
                             <p className="text-white/80 text-xs md:text-sm">Premium Comfort</p>
                         </div>
                     </a>
-                    <a href="/air-max" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
-                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&q=80&w=600" alt="Air Max" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
+                    <a href="/collection/shoes" className="group relative overflow-hidden aspect-[3/4] rounded-lg md:rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&q=80&w=600" alt="Shoes" className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-red-600 via-red-600/20 to-transparent opacity-80 group-hover:opacity-90 transition" />
                         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                            <h3 className="text-white text-xl md:text-2xl font-black uppercase mb-1 md:mb-2">AIR MAX</h3>
+                            <h3 className="text-white text-xl md:text-2xl font-black uppercase mb-1 md:mb-2">SHOES</h3>
                             <p className="text-white/80 text-xs md:text-sm">Iconic Collection</p>
                         </div>
                     </a>
                 </div>
             </section>
 
-            <ProductGrid filter="all" limit={3} />
+            <ProductGrid filter="all" limit={4} />
             
             <section className="bg-red-600 py-8 md:py-12 overflow-hidden whitespace-nowrap">
                 <div className="flex animate-marquee">
@@ -77,14 +77,14 @@ const Home = () => {
                 <div className="space-y-6 md:space-y-8">
                     <p className="text-red-600 font-black uppercase tracking-widest text-xs md:text-sm">Tech Innovation</p>
                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                        TECH <br/>FLEECE
+                        PREMIUM <br/>CLOTHING
                     </h2>
                     <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-lg">
                         Engineered warmth without the weight. Premium fleece technology meets modern design for ultimate comfort and style.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                        <button onClick={() => window.location.href='/tech-fleece'} className="bg-black text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:scale-105 transition shadow-lg">
-                            Shop Tech Fleece
+                        <button onClick={() => window.location.href='/collection/clothing'} className="bg-black text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:scale-105 transition shadow-lg">
+                            Shop Clothing
                         </button>
                         <button className="border-2 border-black px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:bg-black hover:text-white transition">
                             Learn More
@@ -104,14 +104,14 @@ const Home = () => {
                 <div className="space-y-6 md:space-y-8 order-2 lg:order-1">
                     <p className="text-red-600 font-black uppercase tracking-widest text-xs md:text-sm">Iconic Collection</p>
                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none">
-                        AIR <br/>MAX
+                        PREMIUM <br/>SHOES
                     </h2>
                     <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-lg">
                         Revolutionary visible Air cushioning. Experience the legend that changed sneaker culture forever.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                        <button onClick={() => window.location.href='/air-max'} className="bg-black text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:scale-105 transition shadow-lg">
-                            Shop Air Max
+                        <button onClick={() => window.location.href='/collection/shoes'} className="bg-black text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:scale-105 transition shadow-lg">
+                            Shop Shoes
                         </button>
                         <button className="border-2 border-black px-8 md:px-12 py-4 md:py-5 rounded-full font-black uppercase text-xs md:text-sm hover:bg-black hover:text-white transition">
                             Learn More

@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
     
     return (
         <Link 
-            to={`/product/${product.slug}`} 
+            to={`/product/${product.productCode}`} 
             className="group relative flex flex-col h-full bg-white"
             onMouseEnter={() => hasSizes && setShowSizes(true)}
             onMouseLeave={() => !selectedSize && setShowSizes(false)}

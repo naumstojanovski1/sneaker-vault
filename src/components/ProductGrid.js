@@ -177,7 +177,7 @@ const ProductGrid = ({ filter = 'all', limit = null }) => {
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-8 md:gap-y-16">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-x-8 md:gap-y-16">
                         {(limit ? filteredProducts.slice(0, limit) : filteredProducts).map(product => (
                             <ProductCard
                                 key={product.id}
@@ -187,7 +187,7 @@ const ProductGrid = ({ filter = 'all', limit = null }) => {
                     </div>
                     {limit && filteredProducts.length > limit && (
                         <div className="text-center mt-12">
-                            <a href="/all-products" className="inline-block bg-black text-white px-12 py-4 rounded-full font-black uppercase text-sm hover:scale-105 transition">
+                            <a href="/collection/all-products" className="inline-block bg-black text-white px-12 py-4 rounded-full font-black uppercase text-sm hover:scale-105 transition">
                                 See More
                             </a>
                         </div>

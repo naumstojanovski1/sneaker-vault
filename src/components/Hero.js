@@ -40,16 +40,18 @@ const Hero = () => {
             ))}
 
             <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 w-full text-white mb-12">
-                <p className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] mb-4 text-red-500 animate-pulse h-5 md:h-6">
-                    {slides[currentSlide].tag}
-                </p>
-                <h2 className="text-5xl md:text-9xl font-black italic uppercase leading-[0.85] tracking-tighter mb-8 max-w-2xl h-[120px] md:h-[240px] flex flex-col justify-center">
-                    {slides[currentSlide].title} <br/> <span className="text-red-600">{slides[currentSlide].highlight}</span>
-                </h2>
-                <div className="flex gap-2">
-                    {slides.map((_, index) => (
-                        <button key={index} onClick={() => setCurrentSlide(index)} className={`h-1 rounded-full transition-all ${currentSlide === index ? 'w-12 bg-white' : 'w-8 bg-white/50'}`} />
-                    ))}
+                <div className="max-w-2xl">
+                    <p className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] mb-4 text-red-500 animate-pulse">
+                        {slides[currentSlide].tag}
+                    </p>
+                    <h2 className="text-5xl md:text-8xl lg:text-9xl font-black italic uppercase leading-[0.9] tracking-tighter mb-8">
+                        {slides[currentSlide].title} <br/> <span className="text-red-600">{slides[currentSlide].highlight}</span>
+                    </h2>
+                    <div className="flex gap-2">
+                        {slides.map((_, index) => (
+                            <button key={index} onClick={() => setCurrentSlide(index)} className={`h-1 rounded-full transition-all ${currentSlide === index ? 'w-12 bg-white' : 'w-8 bg-white/50'}`} />
+                        ))}
+                    </div>
                 </div>
             </div>
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 import { createOrder } from '../services/orderService';
 import { sendOrderConfirmationEmail } from '../services/emailService';
 import { doc, updateDoc, increment } from 'firebase/firestore';
@@ -15,6 +17,7 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
         zipCode: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { showToast } = useToast();
 
     const total = cart.reduce((acc, item) => acc + item.price, 0);
 
@@ -47,7 +50,7 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
             
             onSuccess(order);
         } catch (error) {
-            alert('Failed to place order. Please try again.');
+            showToast('Failed to place order. Please try again.', 'error');
         } finally {
             setIsSubmitting(false);
         }
@@ -57,7 +60,7 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
         <div className="min-h-screen bg-gray-50 pt-20">
             <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-12">
                 <button onClick={onBack} className="flex items-center gap-2 mb-8 font-bold uppercase text-sm hover:text-gray-600 transition">
-                    <ArrowLeft size={18} /> Back to Cart
+                    <ArrowLeft size={18} /> Back to Home
                 </button>
 
                 <div className="grid lg:grid-cols-2 gap-12">
@@ -153,12 +156,25 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                         
                         <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto">
                             {cart.map((item, idx) => (
-                                <div key={idx} className="flex gap-4">
-                                    <img src={item.img} alt={item.name} className="w-20 h-20 object-cover bg-gray-100" />
+                                <div key={idx} className="flex gap-4 pb-4 border-b last:border-0">
+                                    <Link to={`/product/${item.productCode}`} className="w-20 h-20 bg-gray-100 flex-shrink-0 hover:opacity-75 transition">
+                                        <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                                    </Link>
                                     <div className="flex-1">
-                                        <p className="font-bold text-sm">{item.name}</p>
-                                        <p className="text-xs text-gray-500">{item.category}</p>
-                                        <p className="font-bold mt-1">${item.price}</p>
+                                        <Link to={`/product/${item.productCode}`} className="hover:underline">
+                                            <p className="font-bold text-sm uppercase">{item.name}</p>
+                                        </Link>
+                                        {item.brand && <p className="text-xs text-gray-400 uppercase mt-1">{item.brand}</p>}
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <p className="text-xs text-gray-500 uppercase">{item.type}</p>
+                                            {item.category && <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 uppercase">{item.category}</span>}
+                                        </div>
+                                        {item.sku && <p className="text-xs text-gray-400 mt-0.5">{item.sku}</p>}
+                                        {item.selectedSize && <p className="text-xs text-gray-500 mt-1">Size: {item.selectedSize}</p>}
+                                        <div className="flex items-center justify-between mt-2">
+                                            <p className="text-xs text-gray-500">Qty: {item.quantity || 1}</p>
+                                            <p className="font-bold">${(item.price * (item.quantity || 1)).toFixed(2)}</p>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

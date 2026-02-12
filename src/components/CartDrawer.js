@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const CartDrawer = ({ isOpen, onClose }) => {
@@ -33,17 +33,25 @@ const CartDrawer = ({ isOpen, onClose }) => {
                     ) : (
                         cart.map((item, index) => (
                             <div key={`${item.id}-${item.selectedSize}-${index}`} className="flex gap-4 animate-fade-in">
-                                <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 flex-shrink-0">
+                                <Link to={`/product/${item.productCode}`} onClick={onClose} className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 flex-shrink-0 hover:opacity-75 transition">
                                     <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                                </div>
+                                </Link>
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
-                                        <div className="flex justify-between">
-                                            <h4 className="font-bold uppercase text-sm">{item.name}</h4>
+                                        <div className="flex justify-between gap-2">
+                                            <Link to={`/product/${item.productCode}`} onClick={onClose} className="hover:underline">
+                                                <h4 className="font-bold uppercase text-sm">{item.name}</h4>
+                                            </Link>
                                             <p className="font-bold">${(item.price * (item.quantity || 1)).toFixed(2)}</p>
                                         </div>
-                                        <p className="text-xs text-gray-500 uppercase mt-1">{item.category}</p>
+                                        {item.brand && <p className="text-xs text-gray-400 uppercase mt-1">{item.brand}</p>}
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <p className="text-xs text-gray-500 uppercase">{item.type}</p>
+                                            {item.category && <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 uppercase">{item.category}</span>}
+                                        </div>
+                                        {item.sku && <p className="text-xs text-gray-400 mt-0.5">{item.sku}</p>}
                                         {item.selectedSize && <p className="text-xs text-gray-500 mt-1">Size: {item.selectedSize}</p>}
+                                        <p className="text-xs text-gray-500 mt-0.5">Qty: {item.quantity || 1} × ${item.price.toFixed(2)}</p>
                                     </div>
                                     <div className="flex items-center justify-between mt-2">
                                         <div className="flex items-center gap-2 border">
