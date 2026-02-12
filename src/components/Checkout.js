@@ -32,7 +32,7 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
             
             // Send confirmation email
             try {
-                await fetch('/api/send-order-confirmation', {
+                const emailResponse = await fetch('/api/send-order-confirmation', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -43,6 +43,10 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                         total
                     })
                 });
+                
+                if (!emailResponse.ok) {
+                    console.error('Email API failed:', await emailResponse.text());
+                }
             } catch (emailError) {
                 console.error('Failed to send confirmation email:', emailError);
             }
