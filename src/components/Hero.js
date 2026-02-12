@@ -39,7 +39,7 @@ const Hero = () => {
                 </div>
             ))}
 
-            <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 w-full text-white">
+            <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 w-full text-white mb-12">
                 <p className="text-sm md:text-lg font-bold uppercase tracking-[0.2em] mb-4 text-red-500 animate-pulse h-5 md:h-6">
                     {slides[currentSlide].tag}
                 </p>
