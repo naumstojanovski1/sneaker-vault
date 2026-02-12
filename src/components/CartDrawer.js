@@ -1,12 +1,12 @@
 import React from 'react';
-import { ShoppingCart, X } from 'lucide-react';
+import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const CartDrawer = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
-    const { cart, removeFromCart } = useCart();
-    const total = cart.reduce((acc, item) => acc + item.price, 0);
+    const { cart, removeFromCart, updateQuantity } = useCart();
+    const total = cart.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
 
     const handleCheckout = () => {
         onClose();
@@ -32,24 +32,42 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         </div>
                     ) : (
                         cart.map((item, index) => (
-                            <div key={`${item.id}-${index}`} className="flex gap-6 animate-fade-in">
-                                <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 flex-shrink-0">
+                            <div key={`${item.id}-${item.selectedSize}-${index}`} className="flex gap-4 animate-fade-in">
+                                <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 flex-shrink-0">
                                     <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
                                         <div className="flex justify-between">
-                                            <h4 className="font-bold uppercase text-sm md:text-base">{item.name}</h4>
-                                            <p className="font-bold">${item.price}</p>
+                                            <h4 className="font-bold uppercase text-sm">{item.name}</h4>
+                                            <p className="font-bold">${(item.price * (item.quantity || 1)).toFixed(2)}</p>
                                         </div>
                                         <p className="text-xs text-gray-500 uppercase mt-1">{item.category}</p>
+                                        {item.selectedSize && <p className="text-xs text-gray-500 mt-1">Size: {item.selectedSize}</p>}
                                     </div>
-                                    <button
-                                        onClick={() => removeFromCart(item.id)}
-                                        className="text-[10px] font-bold underline uppercase tracking-widest text-gray-400 hover:text-black text-left"
-                                    >
-                                        Remove
-                                    </button>
+                                    <div className="flex items-center justify-between mt-2">
+                                        <div className="flex items-center gap-2 border">
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.selectedSize, (item.quantity || 1) - 1)}
+                                                className="p-1 hover:bg-gray-100 transition"
+                                            >
+                                                <Minus size={14} />
+                                            </button>
+                                            <span className="text-sm font-bold w-8 text-center">{item.quantity || 1}</span>
+                                            <button
+                                                onClick={() => updateQuantity(item.id, item.selectedSize, (item.quantity || 1) + 1)}
+                                                className="p-1 hover:bg-gray-100 transition"
+                                            >
+                                                <Plus size={14} />
+                                            </button>
+                                        </div>
+                                        <button
+                                            onClick={() => removeFromCart(item.id, item.selectedSize)}
+                                            className="text-[10px] font-bold underline uppercase tracking-widest text-gray-400 hover:text-black"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))

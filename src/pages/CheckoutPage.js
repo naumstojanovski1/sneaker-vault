@@ -12,10 +12,16 @@ const CheckoutPage = () => {
         document.title = 'SNEAKR. - Checkout';
     }, []);
 
-    const handleSuccess = () => {
-        alert('Order placed successfully! We will contact you soon.');
+    const handleSuccess = (order) => {
+        navigate('/order-success', { 
+            state: { 
+                orderNumber: order.orderNumber,
+                email: order.customer.email,
+                items: order.items,
+                total: order.total
+            } 
+        });
         clearCart();
-        navigate('/');
     };
 
     return <Checkout cart={cart} onBack={() => navigate('/')} onSuccess={handleSuccess} />;

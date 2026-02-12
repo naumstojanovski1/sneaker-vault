@@ -66,15 +66,15 @@ const Nav = ({ onOpenCart }) => {
             </div>
 
             <div className="hidden lg:flex flex-1 justify-center space-x-8 text-[13px] font-bold uppercase tracking-tight">
-                <Link to="/new-releases" className="hover:text-gray-400 transition">New Releases</Link>
-                <Link to="/men" className="hover:text-gray-400 transition">Men</Link>
-                <Link to="/women" className="hover:text-gray-400 transition">Women</Link>
+                <Link to="/new-releases" className="hover:text-gray-400 transition">NEW RELEASES</Link>
+                <Link to="/men" className="hover:text-gray-400 transition">MEN</Link>
+                <Link to="/women" className="hover:text-gray-400 transition">WOMEN</Link>
                 <Link to="/sale" className="hover:text-gray-400 transition text-red-600 flex items-center gap-1">
                     <Flame size={14} fill="currentColor" /> SALE
                 </Link>
             </div>
 
-            <div className="flex-1 flex justify-end items-center gap-6">
+            <div className="flex-1 flex justify-end items-center gap-4 md:gap-6">
                 <div className="hidden md:flex items-center bg-gray-100 px-4 py-2 rounded-full group relative">
                     <Search size={18} className="text-gray-400 group-hover:text-black transition" />
                     <input
@@ -129,14 +129,14 @@ const Nav = ({ onOpenCart }) => {
                     )}
                 </div>
                 <button onClick={onOpenCart} className="relative group p-2">
-                    <ShoppingCart size={22} strokeWidth={1.5} />
+                    <ShoppingCart size={20} strokeWidth={1.5} className="md:w-[22px] md:h-[22px]" />
                     {cart.length > 0 && (
                         <span className="absolute top-0 right-0 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                             {cart.length}
                         </span>
                     )}
                 </button>
-                <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden">
+                <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2">
                     {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
@@ -176,13 +176,13 @@ const Nav = ({ onOpenCart }) => {
                 )}
                 <div className="space-y-3 pt-2">
                     <Link to="/new-releases" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                        New Releases
+                        NEW RELEASES
                     </Link>
                     <Link to="/men" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                        Men
+                        MEN
                     </Link>
                     <Link to="/women" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm hover:text-gray-400 transition">
-                        Women
+                        WOMEN
                     </Link>
                     <Link to="/sale" onClick={handleNavClick} className="block py-2 font-bold uppercase text-sm text-red-600 hover:text-red-400 transition flex items-center gap-2">
                         <Flame size={16} fill="currentColor" /> SALE

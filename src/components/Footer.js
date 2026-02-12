@@ -1,6 +1,8 @@
 import React from 'react';
 import { Instagram, Twitter, Facebook, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const Footer = () => (
     <footer className="bg-black text-white pt-20 pb-10">
@@ -21,18 +23,18 @@ const Footer = () => (
             <div>
                 <h5 className="font-bold uppercase text-sm mb-6 tracking-widest">Support</h5>
                 <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                    <li><a href="/" className="hover:text-white transition">Order Status</a></li>
-                    <li><a href="/" className="hover:text-white transition">Shipping & Delivery</a></li>
-                    <li><a href="/" className="hover:text-white transition">Returns</a></li>
-                    <li><a href="/" className="hover:text-white transition">Contact Us</a></li>
+                    <li><a href="/order-status" className="hover:text-white transition">Order Status</a></li>
+                    <li><a href="/shipping" className="hover:text-white transition">Shipping & Delivery</a></li>
+                    <li><a href="/returns" className="hover:text-white transition">Returns</a></li>
+                    <li><a href="/contact" className="hover:text-white transition">Contact Us</a></li>
                 </ul>
             </div>
             <div>
                 <h5 className="font-bold uppercase text-sm mb-6 tracking-widest">About SNEAKR</h5>
                 <ul className="space-y-4 text-sm text-gray-400 font-medium">
-                    <li><a href="/" className="hover:text-white transition">News</a></li>
-                    <li><a href="/" className="hover:text-white transition">Careers</a></li>
-                    <li><a href="/" className="hover:text-white transition">Sustainability</a></li>
+                    <li><a href="/news" className="hover:text-white transition">News</a></li>
+                    <li><a href="/careers" className="hover:text-white transition">Careers</a></li>
+                    <li><a href="/sustainability" className="hover:text-white transition">Sustainability</a></li>
                 </ul>
             </div>
             <div>
@@ -42,9 +44,26 @@ const Footer = () => (
                     <input
                         type="email"
                         placeholder="Email Address"
+                        id="newsletter-email"
                         className="bg-transparent border-none outline-none flex-1 text-sm text-white"
                     />
-                    <button className="text-white hover:text-red-500 transition"><ArrowRight size={18}/></button>
+                    <button 
+                        onClick={async () => {
+                            const email = document.getElementById('newsletter-email').value;
+                            if (email) {
+                                try {
+                                    await addDoc(collection(db, 'newsletter'), { email, date: new Date().toISOString() });
+                                    alert('Subscribed to newsletter!');
+                                    document.getElementById('newsletter-email').value = '';
+                                } catch (error) {
+                                    alert('Error subscribing');
+                                }
+                            }
+                        }}
+                        className="text-white hover:text-red-500 transition"
+                    >
+                        <ArrowRight size={18}/>
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ArrowUp } from 'lucide-react';
@@ -7,6 +8,9 @@ import Nav from './components/Nav';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import ProtectedRoute from './components/ProtectedRoute';
+import TechFleece from './pages/TechFleece';
+import AirMax from './pages/AirMax';
+import AllProducts from './pages/AllProducts';
 import Home from './pages/Home';
 import Men from './pages/Men';
 import Women from './pages/Women';
@@ -17,6 +21,18 @@ import ProductDetail from './pages/ProductDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
+import OrderStatus from './pages/OrderStatus';
+import Shipping from './pages/Shipping';
+import Returns from './pages/Returns';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import News from './pages/News';
+import Careers from './pages/Careers';
+import Sustainability from './pages/Sustainability';
+import BlogLogin from './pages/BlogLogin';
+import BlogDashboard from './pages/BlogDashboard';
+import NewsArticle from './pages/NewsArticle';
+import OrderSuccess from './pages/OrderSuccess';
 import CancelOrder from './pages/CancelOrder';
 import NotFound from './pages/NotFound';
 
@@ -73,8 +89,11 @@ export default function App() {
     return (
         <AuthProvider>
             <CartProvider>
-                <BrowserRouter>
+                <HelmetProvider>
+                    <BrowserRouter>
                     <Routes>
+                        <Route path="/blog/login" element={<BlogLogin />} />
+                        <Route path="/blog/dashboard" element={<BlogDashboard />} />
                         <Route path="/admin" element={<AdminLogin />} />
                         <Route path="/admin/dashboard" element={
                             <ProtectedRoute>
@@ -88,12 +107,25 @@ export default function App() {
                                     <Nav onOpenCart={() => setIsCartOpen(true)} />
                                     <Routes>
                                         <Route path="/" element={<Home />} />
+                                        <Route path="/all-products" element={<AllProducts />} />
+                                        <Route path="/tech-fleece" element={<TechFleece />} />
+                                        <Route path="/air-max" element={<AirMax />} />
                                         <Route path="/men" element={<Men />} />
                                         <Route path="/women" element={<Women />} />
                                         <Route path="/new-releases" element={<NewReleases />} />
                                         <Route path="/sale" element={<Sale />} />
                                         <Route path="/checkout" element={<CheckoutPage />} />
                                         <Route path="/product/:slug" element={<ProductDetail />} />
+                                        <Route path="/order-status" element={<OrderStatus />} />
+                                        <Route path="/shipping" element={<Shipping />} />
+                                        <Route path="/returns" element={<Returns />} />
+                                        <Route path="/contact" element={<Contact />} />
+                                        <Route path="/about" element={<About />} />
+                                        <Route path="/news" element={<News />} />
+                                        <Route path="/news/:id" element={<NewsArticle />} />
+                                        <Route path="/careers" element={<Careers />} />
+                                        <Route path="/sustainability" element={<Sustainability />} />
+                                        <Route path="/order-success" element={<OrderSuccess />} />
                                         <Route path="*" element={<NotFound />} />
                                     </Routes>
                                     <Footer />
@@ -130,6 +162,7 @@ export default function App() {
                         } />
                     </Routes>
                 </BrowserRouter>
+                </HelmetProvider>
             </CartProvider>
         </AuthProvider>
     );

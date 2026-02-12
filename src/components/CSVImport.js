@@ -65,8 +65,8 @@ Air Max Pulse,Comfortable daily wear,The next generation of Air Max is here with
                     productCode,
                     shortDescription: row.shortDescription || '',
                     description: row.description,
+                    type: row.type || 'Shoes',
                     category: row.category,
-                    productType: row.productType,
                     brand: row.brand || '',
                     sku: row.sku,
                     tags: row.tags ? row.tags.split(',').map(t => t.trim()) : [],
@@ -173,7 +173,7 @@ Air Max Pulse,Comfortable daily wear,The next generation of Air Max is here with
                         <div className="border-t pt-6">
                             <p className="font-bold mb-3 text-sm uppercase">CSV Format Guide:</p>
                             <div className="bg-gray-50 p-4 rounded text-xs space-y-2">
-                                <p><strong>Required fields:</strong> name, description, category, productType, sku, price, stock, img, color</p>
+                                <p><strong>Required fields:</strong> name, description, type, category, sku, price, stock, img, color</p>
                                 <p><strong>Boolean fields:</strong> Use "true" or "false" for: forMen, forWomen, allowBackorders, freeShipping, featured</p>
                                 <p><strong>Array fields:</strong> Use comma-separated values for: tags, galleryImages, sizes</p>
                                 <p><strong>Stock status:</strong> in-stock, out-of-stock, or pre-order</p>

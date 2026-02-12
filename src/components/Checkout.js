@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { createOrder } from '../services/orderService';
 import { sendOrderConfirmationEmail } from '../services/emailService';
+import { doc, updateDoc, increment } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const Checkout = ({ cart, onBack, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -28,15 +30,22 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                 paymentMethod: 'Cash on Delivery'
             });
             
+            // Update stock for each product
+            for (const item of cart) {
+                const productRef = doc(db, 'products', item.id);
+                await updateDoc(productRef, {
+                    stock: increment(-(item.quantity || 1))
+                });
+            }
+            
             // Send confirmation email
             try {
                 await sendOrderConfirmationEmail(order, formData);
             } catch (emailError) {
                 console.error('Failed to send confirmation email:', emailError);
-                // Don't fail the order if email fails
             }
             
-            onSuccess();
+            onSuccess(order);
         } catch (error) {
             alert('Failed to place order. Please try again.');
         } finally {

@@ -4,6 +4,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useCart } from '../context/CartContext';
 import { ChevronLeft, Check } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const ProductDetail = () => {
     const { slug } = useParams();
@@ -18,12 +19,6 @@ const ProductDetail = () => {
         loadProduct();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [slug]);
-
-    useEffect(() => {
-        if (product) {
-            document.title = `SNEAKR. - ${product.name}`;
-        }
-    }, [product]);
 
     const loadProduct = async () => {
         try {
@@ -75,6 +70,13 @@ const ProductDetail = () => {
 
     return (
         <div className="min-h-screen pt-20">
+            <SEO 
+                title={product.name}
+                description={product.shortDescription || product.description || `Shop ${product.name} at SNEAKR`}
+                keywords={`${product.brand}, ${product.category}, ${product.name}, sneakers, streetwear`}
+                image={product.img}
+                type="product"
+            />
             <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-12">
                 <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-8 font-bold uppercase text-sm hover:text-gray-600 transition">
                     <ChevronLeft size={18} /> Back

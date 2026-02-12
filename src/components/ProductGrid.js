@@ -66,9 +66,10 @@ const FALLBACK_PRODUCTS = [
     }
 ];
 
-const ProductGrid = ({ filter = 'all' }) => {
+const ProductGrid = ({ filter = 'all', limit = null }) => {
     const [products, setProducts] = useState(FALLBACK_PRODUCTS);
     const [activeCategory, setActiveCategory] = useState('All');
+    const [activeType, setActiveType] = useState('All');
     const [loading, setLoading] = useState(true);
     const [sortBy, setSortBy] = useState('featured');
     const [priceRange, setPriceRange] = useState([0, 500]);
@@ -95,18 +96,30 @@ const ProductGrid = ({ filter = 'all' }) => {
     const filteredProducts = useMemo(() => {
         let filtered = products;
         
+        // Filter out draft products
+        filtered = filtered.filter(p => p.status === 'published');
+        
+        // Type filter (Shoes, Clothing, Accessories)
+        if (activeType !== 'All') {
+            filtered = filtered.filter(p => p.type === activeType);
+        }
+        
         if (filter === 'new-releases') {
-            filtered = products.filter(p => p.category === 'New Arrivals');
+            filtered = filtered.filter(p => p.category === 'New Arrivals');
         } else if (filter === 'men') {
-            filtered = products.filter(p => p.forMen === true);
+            filtered = filtered.filter(p => p.forMen === true);
         } else if (filter === 'women') {
-            filtered = products.filter(p => p.forWomen === true);
+            filtered = filtered.filter(p => p.forWomen === true);
         } else if (filter === 'sale') {
-            filtered = products.filter(p => {
+            filtered = filtered.filter(p => {
                 if (!p.salePrice || !p.price) return false;
                 const discountPercent = ((p.price - p.salePrice) / p.price) * 100;
                 return discountPercent >= 30;
             });
+        } else if (filter === 'tech-fleece') {
+            filtered = filtered.filter(p => p.type === 'Clothing' && p.name.toLowerCase().includes('fleece'));
+        } else if (filter === 'air-max') {
+            filtered = filtered.filter(p => p.type === 'Shoes' && p.name.toLowerCase().includes('air'));
         }
         
         if (activeCategory !== 'All') {
@@ -143,9 +156,10 @@ const ProductGrid = ({ filter = 'all' }) => {
         }
         
         return filtered;
-    }, [activeCategory, products, filter, sortBy, priceRange, selectedSizes]);
+    }, [activeCategory, activeType, products, filter, sortBy, priceRange, selectedSizes]);
 
     const categories = ['All', ...new Set(products.map(p => p.category))];
+    const types = ['All', 'Shoes', 'Clothing', 'Accessories'];
     const allSizes = [...new Set(products.flatMap(p => p.sizes || []))].sort();
 
     const toggleSize = (size) => {
@@ -156,103 +170,55 @@ const ProductGrid = ({ filter = 'all' }) => {
 
     return (
         <section className="max-w-[1440px] mx-auto px-6 md:px-12 py-6">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
-                <div className="flex flex-wrap gap-4">
-                    {categories.map(cat => (
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+                <div className="flex gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+                    {types.map(type => (
                         <button
-                            key={cat}
-                            onClick={() => setActiveCategory(cat)}
-                            className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition border ${
-                                activeCategory === cat
-                                    ? 'bg-black text-white border-black'
-                                    : 'bg-transparent text-gray-400 border-gray-200 hover:border-black hover:text-black'
+                            key={type}
+                            onClick={() => setActiveType(type)}
+                            className={`px-4 md:px-6 py-2 text-xs md:text-sm font-bold uppercase transition whitespace-nowrap ${
+                                activeType === type
+                                    ? 'text-black border-b-2 border-black'
+                                    : 'text-gray-400 hover:text-black'
                             }`}
                         >
-                            {cat}
+                            {type}
                         </button>
                     ))}
                 </div>
-                <div className="flex gap-4 items-center">
-                    <button 
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="px-6 py-2 border-2 border-black font-bold uppercase text-xs hover:bg-black hover:text-white transition"
-                    >
-                        {showFilters ? 'Hide' : 'Show'} Filters
-                    </button>
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="px-4 py-2 border-2 border-black font-bold text-xs uppercase"
-                    >
-                        <option value="featured">Featured</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="discount">Biggest Discount</option>
-                    </select>
-                </div>
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 md:px-4 py-2 border font-bold text-xs uppercase bg-white w-full md:w-auto"
+                >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
             </div>
-
-            {showFilters && (
-                <div className="bg-gray-50 p-6 mb-8 border">
-                    <div className="grid md:grid-cols-3 gap-6">
-                        <div>
-                            <p className="font-bold uppercase text-xs mb-3">Price Range</p>
-                            <div className="space-y-2">
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="500"
-                                    value={priceRange[1]}
-                                    onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-                                    className="w-full"
-                                />
-                                <p className="text-sm font-bold">${priceRange[0]} - ${priceRange[1]}</p>
-                            </div>
-                        </div>
-                        <div className="md:col-span-2">
-                            <p className="font-bold uppercase text-xs mb-3">Sizes</p>
-                            <div className="flex flex-wrap gap-2">
-                                {allSizes.map(size => (
-                                    <button
-                                        key={size}
-                                        onClick={() => toggleSize(size)}
-                                        className={`px-4 py-2 text-xs font-bold border transition ${
-                                            selectedSizes.includes(size)
-                                                ? 'bg-black text-white border-black'
-                                                : 'bg-white text-black border-gray-300 hover:border-black'
-                                        }`}
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        onClick={() => {
-                            setPriceRange([0, 500]);
-                            setSelectedSizes([]);
-                        }}
-                        className="mt-4 text-xs font-bold uppercase underline hover:text-red-600"
-                    >
-                        Clear All Filters
-                    </button>
-                </div>
-            )}
 
             {loading ? (
                 <div className="text-center py-20">
                     <p className="text-gray-400 uppercase text-sm tracking-widest">Loading products...</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-                    {filteredProducts.map(product => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                        />
-                    ))}
-                </div>
+                <>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-x-8 md:gap-y-16">
+                        {(limit ? filteredProducts.slice(0, limit) : filteredProducts).map(product => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                            />
+                        ))}
+                    </div>
+                    {limit && filteredProducts.length > limit && (
+                        <div className="text-center mt-12">
+                            <a href="/all-products" className="inline-block bg-black text-white px-12 py-4 rounded-full font-black uppercase text-sm hover:scale-105 transition">
+                                See More
+                            </a>
+                        </div>
+                    )}
+                </>
             )}
         </section>
     );

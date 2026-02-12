@@ -10,8 +10,8 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
         name: '',
         shortDescription: '',
         description: '',
+        type: 'Shoes',
         category: 'New Arrivals',
-        productType: 'Trainers',
         brand: '',
         sku: '',
         tags: '',
@@ -166,18 +166,13 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                             />
                             <div className="grid grid-cols-2 gap-4">
                                 <select
-                                    value={formData.productType}
-                                    onChange={(e) => setFormData({...formData, productType: e.target.value})}
+                                    value={formData.type}
+                                    onChange={(e) => setFormData({...formData, type: e.target.value})}
                                     className="w-full px-4 py-3 border"
                                 >
-                                    <option>Trainers</option>
-                                    <option>Shoes</option>
-                                    <option>T-Shirts</option>
-                                    <option>Sweatshirts</option>
-                                    <option>Hoodies</option>
-                                    <option>Trousers</option>
-                                    <option>Shorts</option>
-                                    <option>Jackets</option>
+                                    <option value="Shoes">Shoes</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Accessories">Accessories</option>
                                 </select>
                                 <select
                                     value={formData.category}
@@ -425,15 +420,6 @@ const AddProductModal = ({ onClose, editProduct = null }) => {
                             >
                                 <option value="published">Published</option>
                                 <option value="draft">Draft</option>
-                            </select>
-                            <select
-                                value={formData.visibility}
-                                onChange={(e) => setFormData({...formData, visibility: e.target.value})}
-                                className="w-full px-4 py-3 border"
-                            >
-                                <option value="public">Public</option>
-                                <option value="private">Private</option>
-                                <option value="hidden">Hidden</option>
                             </select>
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input
