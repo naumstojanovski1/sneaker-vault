@@ -68,13 +68,9 @@ const FALLBACK_PRODUCTS = [
 
 const ProductGrid = ({ filter = 'all', limit = null }) => {
     const [products, setProducts] = useState(FALLBACK_PRODUCTS);
-    const [activeCategory, setActiveCategory] = useState('All');
     const [activeType, setActiveType] = useState('All');
     const [loading, setLoading] = useState(true);
     const [sortBy, setSortBy] = useState('featured');
-    const [priceRange, setPriceRange] = useState([0, 500]);
-    const [selectedSizes, setSelectedSizes] = useState([]);
-    const [showFilters, setShowFilters] = useState(false);
 
     useEffect(() => {
         loadProducts();
@@ -121,20 +117,6 @@ const ProductGrid = ({ filter = 'all', limit = null }) => {
         } else if (filter === 'air-max') {
             filtered = filtered.filter(p => p.type === 'Shoes' && p.name.toLowerCase().includes('air'));
         }
-        
-        if (activeCategory !== 'All') {
-            filtered = filtered.filter(p => p.category === activeCategory);
-        }
-
-        // Price filter
-        filtered = filtered.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
-
-        // Size filter
-        if (selectedSizes.length > 0) {
-            filtered = filtered.filter(p => 
-                p.sizes && p.sizes.some(size => selectedSizes.includes(size))
-            );
-        }
 
         // Sorting
         if (sortBy === 'price-low') {
@@ -156,17 +138,9 @@ const ProductGrid = ({ filter = 'all', limit = null }) => {
         }
         
         return filtered;
-    }, [activeCategory, activeType, products, filter, sortBy, priceRange, selectedSizes]);
+    }, [activeType, products, filter, sortBy]);
 
-    const categories = ['All', ...new Set(products.map(p => p.category))];
     const types = ['All', 'Shoes', 'Clothing', 'Accessories'];
-    const allSizes = [...new Set(products.flatMap(p => p.sizes || []))].sort();
-
-    const toggleSize = (size) => {
-        setSelectedSizes(prev => 
-            prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
-        );
-    };
 
     return (
         <section className="max-w-[1440px] mx-auto px-6 md:px-12 py-6">

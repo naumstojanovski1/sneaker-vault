@@ -28,7 +28,7 @@ const Hero = () => {
             setCurrentSlide((prev) => (prev + 1) % slides.length);
         }, 5000);
         return () => clearInterval(timer);
-    }, []);
+    }, [slides.length]);
 
     return (
         <section className="relative h-screen flex items-center pt-16 overflow-hidden">

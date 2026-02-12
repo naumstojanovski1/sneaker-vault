@@ -12,6 +12,7 @@ const NewsArticle = () => {
 
     useEffect(() => {
         loadArticle();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const loadArticle = async () => {
