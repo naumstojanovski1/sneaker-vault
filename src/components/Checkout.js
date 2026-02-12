@@ -3,8 +3,6 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { createOrder } from '../services/orderService';
-import { doc, updateDoc, increment } from 'firebase/firestore';
-import { db } from '../config/firebase';
 
 const Checkout = ({ cart, onBack, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -31,14 +29,6 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                 customer: formData,
                 paymentMethod: 'Cash on Delivery'
             });
-            
-            // Update stock for each product
-            for (const item of cart) {
-                const productRef = doc(db, 'products', item.id);
-                await updateDoc(productRef, {
-                    stock: increment(-(item.quantity || 1))
-                });
-            }
             
             onSuccess(order);
         } catch (error) {
