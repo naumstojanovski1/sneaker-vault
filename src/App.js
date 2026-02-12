@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
@@ -96,6 +97,7 @@ export default function App() {
                     <ConfirmProvider>
                         <HelmetProvider>
                             <BrowserRouter>
+                    <SpeedInsights />
                     <Routes>
                         <Route path="/blog" element={<BlogLogin />} />
                         <Route path="/blog/dashboard" element={<BlogDashboard />} />
