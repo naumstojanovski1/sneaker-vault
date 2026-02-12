@@ -30,6 +30,23 @@ const Checkout = ({ cart, onBack, onSuccess }) => {
                 paymentMethod: 'Cash on Delivery'
             });
             
+            // Send confirmation email
+            try {
+                await fetch('/api/send-order-confirmation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderNumber: order.orderNumber,
+                        customerName: formData.fullName,
+                        customerEmail: formData.email,
+                        items: cart,
+                        total
+                    })
+                });
+            } catch (emailError) {
+                console.error('Failed to send confirmation email:', emailError);
+            }
+            
             onSuccess(order);
         } catch (error) {
             showToast('Failed to place order. Please try again.', 'error');
