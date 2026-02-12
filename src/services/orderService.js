@@ -1,11 +1,10 @@
 import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { getNextOrderNumber } from './counterService';
 
 const ORDERS_COLLECTION = 'orders';
 
 export const createOrder = async (orderData) => {
-    const orderNumber = await getNextOrderNumber();
+    const orderNumber = Date.now(); // Simple order number using timestamp
     const order = {
         ...orderData,
         orderNumber,
